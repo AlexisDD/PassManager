@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">PassManager</string>
+
+    <string name="add_password">Ajouter un mot de passe</string>
+    <string name="menu_search">Rechercher</string>
+    <string name="menu_import">Importer</string>
+    <string name="menu_export">Exporter</string>
+    <string name="menu_reset">Réinitialiser</string>
+    <string name="delete_password">Supprimer un mot de passe</string>
+    <string name="item_description">Libellé</string>
+    <string name="item_account">example@example.com</string>
+    <string name="item_view">Vxoir le mot de passe</string>
+    <string name="fragment_list">Mots de passes</string>
+</resources>

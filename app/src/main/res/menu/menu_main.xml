@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="fr.alexis.passmanager.MainActivity">
+
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="100"
+        android:title="@string/menu_search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_import"
+        android:orderInCategory="101"
+        android:title="@string/menu_import"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_export"
+        android:orderInCategory="102"
+        android:title="@string/menu_export"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_reset"
+        android:orderInCategory="103"
+        android:title="@string/menu_reset"
+        app:showAsAction="never" />
+</menu>
