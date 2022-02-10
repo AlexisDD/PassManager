@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/list_fragment"
-        android:name="fr.alexis.passmanager.ListFragment"
+        android:name="fr.alexis.passmanager.ui.ListFragment"
         android:label="@string/fragment_list"
         tools:layout="@layout/fragment_list">
 
-        <!--<action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />-->
-    </fragment>
-    <!--<fragment
-        android:id="@+id/SecondFragment"
-        android:name="fr.alexis.passmanager.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>-->
+            android:id="@+id/action_list_to_add"
+            app:destination="@id/addFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="fr.alexis.passmanager.ui.AddFragment"
+        android:label="@string/fragment_add"
+        tools:layout="@layout/fragment_add"/>
 </navigation>
