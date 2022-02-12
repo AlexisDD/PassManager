@@ -10,10 +10,11 @@
     <string name="item_description">Libellé</string>
     <string name="item_account">example@example.com</string>
     <string name="item_view">Voir le mot de passe</string>
-    <string name="fragment_list">Mots de passes</string>
+    <string name="fragment_list">Mots de passe</string>
     <string name="fragment_add">Ajouter un mot de passe</string>
     <string name="hint_account">Adresse mail / Identifiant</string>
     <string name="hint_password">Mot de passe</string>
     <string name="hint_description">Libellé</string>
     <string name="button_add">Ajouter</string>
+    <string name="empty_list">Aucun compte enregistré</string>
 </resources>

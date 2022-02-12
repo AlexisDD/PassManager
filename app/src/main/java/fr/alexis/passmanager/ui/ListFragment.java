@@ -44,19 +44,32 @@ public class ListFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        Password p1 = new Password("GitHub", "alexisdesaintdenis@yahoo.fr", "ABCDEF");
-        Password p2 = new Password("OVH", "alexisdesaintdenis@hotmail.fr", "ABCDEF");
-        Password p3 = new Password("Google", "alexisdd50@gmail.com", "ABCDEF");
-        Password p4 = new Password("PayPal", "contact@yahoo.fr", "ABCDEF");
-        Password p5 = new Password("Yahoo", "abcdefghijk@yahoo.fr", "ABCDEF");
-        Password p6 = new Password("Hotmail", "alexisdesaintdenis@yahoo.fr", "ABCDEF");
-        Password p7 = new Password("Riot", "alexisdesaintdenis@yahoo.fr", "ABCDEF");
-        Password p8 = new Password("Coinbase", "test@yahoo.fr", "ABCDEF");
-        Password p9 = new Password("Binance", "alexisdesaintdenis@yahoo.fr", "ABCDEF");
-        Password p10 = new Password("Matmut", "webmaster@yahoo.fr", "ABCDEF");
-        Password[] passwords = {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
+        Password p1 = new Password("Nom1", "test@yahoo.fr", "ABCDEF");
+        Password p2 = new Password("Nom2", "test@hotmail.fr", "ABCDEF");
+        Password p3 = new Password("Nom3", "test@gmail.com", "ABCDEF");
+        Password p4 = new Password("Nom4", "contact@yahoo.fr", "ABCDEF");
+        Password p5 = new Password("Nom5", "abcdefghijk@yahoo.fr", "ABCDEF");
+        Password p6 = new Password("Nom6", "azertyuiop@yahoo.fr", "ABCDEF");
+        Password p7 = new Password("Nom7", "poiuytreza@yahoo.fr", "ABCDEF");
+        Password p8 = new Password("Nom8", "test@yahoo.fr", "ABCDEF");
+        Password p9 = new Password("Nom9", "mlkjhgfdsq@yahoo.fr", "ABCDEF");
+        Password[] passwords = {p1, p2, p3, p4, p5, p6, p7, p8, p9};
 
         recyclerView.setAdapter(adapter = new PasswordAdapter(passwords));
+
+        // If the dataset is empty, display a message.
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                if(adapter.getItemCount() == 0) {
+                    binding.emptyView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    binding.emptyView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         binding.fabAdd.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
