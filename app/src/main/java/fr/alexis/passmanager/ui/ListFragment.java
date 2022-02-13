@@ -1,5 +1,6 @@
 package fr.alexis.passmanager.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +40,13 @@ public class ListFragment extends Fragment {
 
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        NavController navController = NavHostFragment.findNavController(this);
+
+        boolean configured = sharedPreferences.getBoolean("configured", false);
+        if(!configured) {
+            navController.navigate(R.id.action_list_to_config);
+        }
         RecyclerView recyclerView = binding.rvPasswords;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
@@ -71,10 +81,7 @@ public class ListFragment extends Fragment {
             }
         });
 
-        binding.fabAdd.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-            navController.navigate(R.id.action_list_to_add);
-        });
+        binding.fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_list_to_add));
     }
 
     @Override

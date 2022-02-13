@@ -3,10 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/list_fragment">
+    app:startDestination="@id/listFragment">
 
     <fragment
-        android:id="@+id/list_fragment"
+        android:id="@+id/configFragment"
+        android:name="fr.alexis.passmanager.ui.ConfigFragment"
+        android:label="@string/fragment_config"
+        tools:layout="@layout/fragment_config">
+
+        <action
+            android:id="@+id/action_config_to_list"
+            app:destination="@id/listFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/listFragment"
         android:name="fr.alexis.passmanager.ui.ListFragment"
         android:label="@string/fragment_list"
         tools:layout="@layout/fragment_list">
@@ -18,6 +35,16 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_list_to_config"
+            app:destination="@id/configFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/listFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -25,4 +52,5 @@
         android:name="fr.alexis.passmanager.ui.AddFragment"
         android:label="@string/fragment_add"
         tools:layout="@layout/fragment_add"/>
+
 </navigation>

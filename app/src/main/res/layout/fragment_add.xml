@@ -13,13 +13,13 @@
         android:layout_marginBottom="40dp"
         app:startIconDrawable="@drawable/ic_edit"
         app:startIconContentDescription="@string/hint_description"
-        android:labelFor="@id/description_input"
-        android:hint="@string/hint_description">
+        android:labelFor="@id/description_input">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/description_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_description"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -31,8 +31,7 @@
         android:layout_marginBottom="20dp"
         app:startIconDrawable="@drawable/ic_account"
         app:startIconContentDescription="@string/hint_account"
-        android:labelFor="@id/account_input"
-        android:hint="@string/hint_account">
+        android:labelFor="@id/account_input">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/account_input"
@@ -40,7 +39,8 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:lines="1"
-            android:maxLength="100" />
+            android:maxLength="100"
+            android:hint="@string/hint_account"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -50,16 +50,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/account_layout"
         android:layout_marginBottom="40dp"
-        app:startIconDrawable="@drawable/ic_password"
-        app:startIconContentDescription="@string/hint_password"
         android:labelFor="@id/password_input"
-        android:hint="@string/hint_password"
-        app:endIconMode="password_toggle">
+        app:endIconMode="password_toggle"
+        app:startIconContentDescription="@string/hint_password"
+        app:startIconDrawable="@drawable/ic_password">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/hint_password"
             android:inputType="textPassword"
             android:lines="1"
             android:maxLength="50" />
@@ -67,7 +67,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/filledButton"
+        android:id="@+id/button_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

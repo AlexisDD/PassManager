@@ -17,4 +17,9 @@
     <string name="hint_description">Libellé</string>
     <string name="button_add">Ajouter</string>
     <string name="empty_list">Aucun compte enregistré</string>
+    <string name="button_validate">Valider</string>
+    <string name="config_title">Création d\'un mot de passe principal</string>
+    <string name="master_password_helper">Ce mot de passe permettra de déverrouiller l\'application.</string>
+    <string name="fragment_config">Configuration</string>
+    <string name="hint_confirm">Confirmer le mot de passe</string>
 </resources>
