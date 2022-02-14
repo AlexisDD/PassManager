@@ -93,25 +93,5 @@ public class ConfigFragment extends Fragment {
             }
 
         });
-
-                /*SecretKey secretKey = EncryptionService.createSecretKey(masterInput.getText().toString());
-                String encodedKey = Base64.encodeToString(secretKey.getEncoded(), Base64.DEFAULT);
-                Log.d("ConfigFragment", encodedKey);
-
-                final Cipher encryptionCipher;
-                final Cipher decryptionCipher;
-                PBEParameterSpec pbeParamSpec = new PBEParameterSpec("ad7QUAmilD0nhaf.1TuhpVm9mwt-88ZEMWR7".getBytes(), 65536);
-
-                encryptionCipher = Cipher.getInstance("PBEWithSHA256And256BitAES-CBC-BC");
-                decryptionCipher = Cipher.getInstance("PBEWithSHA256And256BitAES-CBC-BC");
-
-                encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey, pbeParamSpec);
-                decryptionCipher.init(Cipher.DECRYPT_MODE, secretKey, pbeParamSpec);
-
-                String monText = "BONJOUR VOICI MON TEXTE";
-                byte[] encryptedBytes = encryptionCipher.doFinal(monText.getBytes());
-                Log.d("ConfigFragment-Encrypt",  Base64.encodeToString(encryptedBytes, Base64.DEFAULT));
-                byte[] decoded = decryptionCipher.doFinal(encryptedBytes);
-                Log.d("ConfigFragment-Decrypt",  new String(decoded));*/
     }
 }

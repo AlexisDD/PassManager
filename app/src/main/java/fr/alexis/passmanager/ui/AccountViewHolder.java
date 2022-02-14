@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import fr.alexis.passmanager.R;
 
-public class PasswordViewHolder extends RecyclerView.ViewHolder {
+public class AccountViewHolder extends RecyclerView.ViewHolder {
     private final TextView itemDescription;
     private final TextView itemAccount;
     private final ImageView itemIcon;
     private final ImageButton itemButtonView;
     private final ImageButton itemButtonMore;
 
-    public PasswordViewHolder(View v) {
+    public AccountViewHolder(View v) {
         super(v);
 
         this.itemDescription = v.findViewById(R.id.item_description);

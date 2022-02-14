@@ -77,7 +77,7 @@ public class EncryptionService {
 
     private void initCiphers() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
         GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
-        
+
         encryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
         decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
 

@@ -1,20 +1,29 @@
-package fr.alexis.passmanager.model;
+package fr.alexis.passmanager.database;
 
-public class Password {
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity
+public class Account {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String description;
     private String account;
     private String cipherPassword;
 
-    public Password(String description, String account, String cipherPassword){
+    public Account(String description, String account, String cipherPassword){
         this.description = description;
         this.account = account;
         this.cipherPassword = cipherPassword;
     }
 
-    public Password(String description, String cipherPassword){
-        this.description = description;
-        this.cipherPassword = cipherPassword;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getDescription() {
@@ -40,5 +49,4 @@ public class Password {
     public void setCipherPassword(String cipherPassword) {
         this.cipherPassword = cipherPassword;
     }
-
 }

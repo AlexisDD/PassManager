@@ -12,23 +12,27 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Random;
+
 import fr.alexis.passmanager.R;
+import fr.alexis.passmanager.database.AccountViewModel;
 import fr.alexis.passmanager.databinding.FragmentListBinding;
-import fr.alexis.passmanager.model.Password;
+import fr.alexis.passmanager.database.Account;
 
 public class ListFragment extends Fragment {
 
     private final String TAG = "ListFragment";
     private FragmentListBinding binding;
-    private PasswordAdapter adapter;
+    private AccountViewModel accountViewModel;
+    private AccountAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,46 +46,52 @@ public class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         NavController navController = NavHostFragment.findNavController(this);
+        RecyclerView recyclerView = binding.rvPasswords;
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 
         boolean configured = sharedPreferences.getBoolean("configured", false);
         if(!configured) {
             navController.navigate(R.id.action_list_to_config);
         }
-        RecyclerView recyclerView = binding.rvPasswords;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setAdapter(adapter = new AccountAdapter(new AccountAdapter.AccountDiff()));
 
-        Password p1 = new Password("Nom1", "test@yahoo.fr", "ABCDEF");
-        Password p2 = new Password("Nom2", "test@hotmail.fr", "ABCDEF");
-        Password p3 = new Password("Nom3", "test@gmail.com", "ABCDEF");
-        Password p4 = new Password("Nom4", "contact@yahoo.fr", "ABCDEF");
-        Password p5 = new Password("Nom5", "abcdefghijk@yahoo.fr", "ABCDEF");
-        Password p6 = new Password("Nom6", "azertyuiop@yahoo.fr", "ABCDEF");
-        Password p7 = new Password("Nom7", "poiuytreza@yahoo.fr", "ABCDEF");
-        Password p8 = new Password("Nom8", "test@yahoo.fr", "ABCDEF");
-        Password p9 = new Password("Nom9", "mlkjhgfdsq@yahoo.fr", "ABCDEF");
-        Password[] passwords = {p1, p2, p3, p4, p5, p6, p7, p8, p9};
-
-        recyclerView.setAdapter(adapter = new PasswordAdapter(passwords));
-
-        // If the dataset is empty, display a message.
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                if(adapter.getItemCount() == 0) {
-                    binding.emptyView.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                } else {
-                    binding.emptyView.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
-            }
+        accountViewModel.getAllAccounts().observe(getViewLifecycleOwner(), accounts -> {
+            // Update the cached copy of the accounts in the adapter.
+            checkIfEmpty(accounts.size());
+            adapter.submitList(accounts);
         });
 
-        binding.fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_list_to_add));
+        binding.fabAdd.setOnClickListener(v -> {
+            //navController.navigate(R.id.action_list_to_add);
+            Account p1 = new Account("Nom1", "test@yahoo.fr", "ABCDEF");
+            Account p2 = new Account("Nom2", "test@hotmail.fr", "ABCDEF");
+            Account p3 = new Account("Nom3", "test@gmail.com", "ABCDEF");
+            Account p4 = new Account("Nom4", "contact@yahoo.fr", "ABCDEF");
+            Account p5 = new Account("Nom5", "abcdefghijk@yahoo.fr", "ABCDEF");
+            Account p6 = new Account("Nom6", "azertyuiop@yahoo.fr", "ABCDEF");
+            Account p7 = new Account("Nom7", "poiuytreza@yahoo.fr", "ABCDEF");
+            Account p8 = new Account("Nom8", "test@yahoo.fr", "ABCDEF");
+            Account p9 = new Account("Nom9", "mlkjhgfdsq@yahoo.fr", "ABCDEF");
+            Account[] accounts = {p1, p2, p3, p4, p5, p6, p7, p8, p9};
+            Random generator = new Random();
+            int randomIndex = generator.nextInt(accounts.length);
+            accountViewModel.insert(accounts[randomIndex]);
+        });
+    }
+
+    private void checkIfEmpty(int size) {
+        if(size == 0 && binding.rvPasswords.getVisibility() == View.VISIBLE) {
+            binding.emptyView.setVisibility(View.VISIBLE);
+            binding.rvPasswords.setVisibility(View.GONE);
+        } else if(size != 0 && binding.emptyView.getVisibility() == View.VISIBLE) {
+            binding.emptyView.setVisibility(View.GONE);
+            binding.rvPasswords.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
