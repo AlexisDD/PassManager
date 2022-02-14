@@ -66,22 +66,7 @@ public class ListFragment extends Fragment {
             adapter.submitList(accounts);
         });
 
-        binding.fabAdd.setOnClickListener(v -> {
-            //navController.navigate(R.id.action_list_to_add);
-            Account p1 = new Account("Nom1", "test@yahoo.fr", "ABCDEF");
-            Account p2 = new Account("Nom2", "test@hotmail.fr", "ABCDEF");
-            Account p3 = new Account("Nom3", "test@gmail.com", "ABCDEF");
-            Account p4 = new Account("Nom4", "contact@yahoo.fr", "ABCDEF");
-            Account p5 = new Account("Nom5", "abcdefghijk@yahoo.fr", "ABCDEF");
-            Account p6 = new Account("Nom6", "azertyuiop@yahoo.fr", "ABCDEF");
-            Account p7 = new Account("Nom7", "poiuytreza@yahoo.fr", "ABCDEF");
-            Account p8 = new Account("Nom8", "test@yahoo.fr", "ABCDEF");
-            Account p9 = new Account("Nom9", "mlkjhgfdsq@yahoo.fr", "ABCDEF");
-            Account[] accounts = {p1, p2, p3, p4, p5, p6, p7, p8, p9};
-            Random generator = new Random();
-            int randomIndex = generator.nextInt(accounts.length);
-            accountViewModel.insert(accounts[randomIndex]);
-        });
+        binding.fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_list_to_add));
     }
 
     private void checkIfEmpty(int size) {

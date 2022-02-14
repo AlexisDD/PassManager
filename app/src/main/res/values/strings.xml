@@ -23,4 +23,5 @@
     <string name="fragment_config">Configuration</string>
     <string name="hint_confirm">Confirmer le mot de passe</string>
     <string name="login_title">Connexion</string>
+    <string name="add_account_success">Compte ajouté</string>
 </resources>
