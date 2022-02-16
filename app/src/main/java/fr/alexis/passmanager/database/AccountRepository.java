@@ -4,6 +4,8 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 import java.util.List;
 
 public class AccountRepository {
@@ -21,7 +23,15 @@ public class AccountRepository {
         return allAccounts;
     }
 
+    ListenableFuture<Account> getAccountById(int id){
+        return accountDao.getAccountById(id);
+    }
+
     void insert(Account account) {
         Database.databaseWriteExecutor.execute(() -> accountDao.insert(account));
+    }
+
+    public void deleteById(int id) {
+        Database.databaseWriteExecutor.execute(() -> accountDao.deleteById(id));
     }
 }

@@ -17,6 +17,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -51,7 +52,7 @@ public class ConfigFragment extends Fragment {
         binding.buttonSubmit.setOnClickListener(v -> {
             if(masterInput.getText() == null || confirmInput.getText() == null
                     || !masterInput.getText().toString().equals(confirmInput.getText().toString())) {
-                binding.confirmMasterPasswordLayout.setError("Les deux mots de passe ne sont pas les mêmes.");
+                binding.confirmMasterPasswordLayout.setError(getString(R.string.confirm_pw_error));
                 return;
             }
             binding.confirmMasterPasswordLayout.setError(null);
@@ -60,31 +61,20 @@ public class ConfigFragment extends Fragment {
                 EncryptionService encryptionService = EncryptionService.getInstance();
                 encryptionService.init(masterInput.getText().toString());
 
-                Log.d("KEYORIGINAL", Base64.encodeToString(encryptionService.getSecretKey().getEncoded(), Base64.DEFAULT));
-
-                String monText = "BONJOUR VOICI MON TEXTE";
-
-                byte[] encryptedBytes;
+                String monText = EncryptionUtils.LOGIN_HASH;
                 try {
-                    encryptedBytes = encryptionService.encrypt(monText);
-                    Log.d("ConfigFragment-Encrypt",  Base64.encodeToString(encryptedBytes, Base64.DEFAULT));
-
+                    byte[] encryptedBytes = encryptionService.encrypt(monText);
                     EncryptionUtils.writeSecretKeyToKeystore(encryptionService.getSecretKey());
-                    SecretKey s = EncryptionUtils.readSecretKeyFromKeyStore();
-                    encryptionService.init(s);
-                    byte[] decoded = encryptionService.decrypt(encryptedBytes);
-                    Log.d("ConfigFragment-Decrypt",  new String(decoded));
-                } catch (IllegalBlockSizeException | BadPaddingException e) {
+
+                    // Setting a preference to ask for configuration only on first launch
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("login", Base64.encodeToString(encryptedBytes, Base64.DEFAULT));
+                    editor.putBoolean("configured" ,true);
+                    editor.apply();
+                } catch (IllegalBlockSizeException | BadPaddingException | IOException e) {
                     e.printStackTrace();
                 }
-
-
-
-                // Setting a preference to ask for configuration only on first launch
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("configured" ,true);
-                editor.apply();
 
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
                 navController.navigate(R.id.action_config_to_list);

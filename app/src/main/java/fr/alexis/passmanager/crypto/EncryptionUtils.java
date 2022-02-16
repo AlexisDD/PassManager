@@ -1,23 +1,20 @@
 package fr.alexis.passmanager.crypto;
 
-import android.content.Context;
 import android.security.keystore.KeyProperties;
 import android.security.keystore.KeyProtection;
-import android.util.Base64;
-import android.util.Log;
 
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.Enumeration;
 
 import javax.crypto.SecretKey;
 
 public class EncryptionUtils {
+
+    public static String LOGIN_HASH = "bc7b8edf9b60a083b3cd648237c10897";
 
     public static void writeSecretKeyToKeystore(SecretKey secretKey) {
         KeyStore keyStore;

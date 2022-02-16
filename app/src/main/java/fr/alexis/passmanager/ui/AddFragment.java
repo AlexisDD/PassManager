@@ -17,7 +17,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+
 import fr.alexis.passmanager.R;
+import fr.alexis.passmanager.crypto.EncryptionService;
 import fr.alexis.passmanager.database.Account;
 import fr.alexis.passmanager.database.AccountViewModel;
 import fr.alexis.passmanager.databinding.FragmentAddBinding;
@@ -54,15 +62,32 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        Account newAccount = new Account(descriptionInput.getText().toString(),
-                accountInput.getText().toString(),
-                passwordInput.getText().toString());
+        byte[] cipherPassword = encryptPassword(passwordInput.getText().toString());
+        if(cipherPassword == null) {
+            // login
+        } else {
+            Account newAccount = new Account(descriptionInput.getText().toString(),
+                    accountInput.getText().toString(),
+                    cipherPassword);
 
-        accountViewModel.insert(newAccount);
-        navController.navigateUp();
-        Snackbar snackBar = Snackbar.make(requireActivity().findViewById(R.id.main_parent),
-                R.string.add_account_success, Snackbar.LENGTH_LONG);
-        snackBar.show();
+            accountViewModel.insert(newAccount);
+            navController.navigateUp();
+            Snackbar snackBar = Snackbar.make(requireActivity().findViewById(R.id.main_parent),
+                    R.string.add_account_success, Snackbar.LENGTH_LONG);
+            snackBar.show();
+        }
+    }
+
+    private byte[] encryptPassword(String plainPassword) {
+        if(EncryptionService.getInstance().hasSecretKey()){
+            try {
+                EncryptionService encryptionService = EncryptionService.getInstance();
+                return encryptionService.encrypt(plainPassword);
+            } catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | IOException | InvalidKeyException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     private boolean checkInputError(EditText input, TextInputLayout layout, String errorText) {

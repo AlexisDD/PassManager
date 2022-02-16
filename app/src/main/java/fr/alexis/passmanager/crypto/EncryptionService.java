@@ -1,10 +1,15 @@
 package fr.alexis.passmanager.crypto;
 
+import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -13,9 +18,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class EncryptionService {
@@ -26,7 +29,6 @@ public class EncryptionService {
     private static final int iterationCount = 65536;
     private static final int IV_LENGTH_BYTE = 12;
     private static final int TAG_LENGTH_BIT = 128;
-    private static final byte[] iv = getRandomIV();
     private SecretKey secretKey;
     private Cipher encryptionCipher;
     private Cipher decryptionCipher;
@@ -45,9 +47,13 @@ public class EncryptionService {
         initCiphers();
     }
 
-    public void init(SecretKey secretKey) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchPaddingException, InvalidKeyException {
+    public void init(SecretKey secretKey) throws NoSuchAlgorithmException, NoSuchPaddingException {
         this.secretKey = secretKey;
         initCiphers();
+    }
+
+    public void destroy() {
+        instance = null;
     }
 
     public SecretKey getSecretKey() {
@@ -58,33 +64,51 @@ public class EncryptionService {
         return secretKey != null;
     }
 
-    public byte[] encrypt(String plainText) throws IllegalBlockSizeException, BadPaddingException {
-        return encryptionCipher.doFinal(plainText.getBytes());
+    public byte[] encrypt(String plainText) throws IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IOException {
+        byte[] iv = getRandomIV();
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
+        encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParameterSpec);
+
+        byte[] cipher = encryptionCipher.doFinal(plainText.getBytes());
+        Log.e("ENCRYPT-A", Arrays.toString(cipher));
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        b.write(iv);
+        b.write(cipher);
+        Log.e("ENCRYPT-B", Arrays.toString(b.toByteArray()));
+        return b.toByteArray();
     }
 
-    public byte[] decrypt(byte[] cipherText) throws IllegalBlockSizeException, BadPaddingException {
-        return decryptionCipher.doFinal(cipherText);
+    public byte[] decrypt(byte[] cipherText) throws IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
+        byte[] iv = Arrays.copyOfRange(cipherText , 0, IV_LENGTH_BYTE);
+        byte[] toDecrypt = Arrays.copyOfRange(cipherText, 12, cipherText.length);
+
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
+        decryptionCipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
+
+        return decryptionCipher.doFinal(toDecrypt);
     }
 
     public boolean checkKey(byte[] cipherText) {
         try {
-            decryptionCipher.doFinal(cipherText);
+            Log.e("CHECK-KEY", Arrays.toString(cipherText));
+            byte[] iv = Arrays.copyOfRange(cipherText , 0, IV_LENGTH_BYTE);
+            byte[] toDecrypt = Arrays.copyOfRange(cipherText, IV_LENGTH_BYTE, cipherText.length);
+            Log.e("CHECK-KEY-IV", Arrays.toString(iv));
+            Log.e("CHECK-KEY-CIPHER", Arrays.toString(toDecrypt));
+            GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
+            decryptionCipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
+            decryptionCipher.doFinal(toDecrypt);
+
             return true;
-        } catch (BadPaddingException | IllegalBlockSizeException e) {
+        } catch (BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException | InvalidKeyException e) {
             return false;
         }
     }
 
-    private void initCiphers() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
-        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
-
+    private void initCiphers() throws NoSuchAlgorithmException, NoSuchPaddingException {
         encryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
         decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
-
-        encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParameterSpec);
-        decryptionCipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
     }
-
 
     public static SecretKey createSecretKey(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, iterationCount);

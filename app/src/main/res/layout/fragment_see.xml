@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="50dp"
+    android:orientation="vertical">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/see_title"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_marginBottom="40dp"
+        android:textSize="20sp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/account_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_account"
+        android:layout_marginBottom="30dp"
+        app:startIconDrawable="@drawable/ic_account"
+        app:startIconContentDescription="@string/hint_account"
+        android:labelFor="@id/account_input">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/account_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:lines="1"
+            android:maxLength="100"
+            android:enabled="false"
+            android:hint="@string/hint_account"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/password_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/account_layout"
+        android:labelFor="@id/password_input"
+        app:endIconMode="password_toggle"
+        app:startIconContentDescription="@string/hint_password"
+        app:startIconDrawable="@drawable/ic_password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_password"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:enabled="false"
+            android:maxLength="50" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+</RelativeLayout>

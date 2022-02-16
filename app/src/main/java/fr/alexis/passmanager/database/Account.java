@@ -10,9 +10,9 @@ public class Account {
     private int id;
     private String description;
     private String account;
-    private String cipherPassword;
+    private byte[] cipherPassword;
 
-    public Account(String description, String account, String cipherPassword){
+    public Account(String description, String account, byte[] cipherPassword){
         this.description = description;
         this.account = account;
         this.cipherPassword = cipherPassword;
@@ -42,11 +42,11 @@ public class Account {
         this.account = account;
     }
 
-    public String getCipherPassword() {
+    public byte[] getCipherPassword() {
         return cipherPassword;
     }
 
-    public void setCipherPassword(String cipherPassword) {
+    public void setCipherPassword(byte[] cipherPassword) {
         this.cipherPassword = cipherPassword;
     }
 }

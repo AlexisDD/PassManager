@@ -45,6 +45,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.4.1'
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-guava:$room_version"
+    implementation "com.google.guava:guava:31.0.1-android"
+
     implementation "androidx.core:core-splashscreen:1.0.0-beta01"
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation 'androidx.preference:preference:1.2.0'

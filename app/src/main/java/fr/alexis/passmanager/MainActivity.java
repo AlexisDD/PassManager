@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             NavController navController = navHostFragment.getNavController();
             appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
             AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.configFragment, R.id.listFragment)
+                    R.id.configFragment, R.id.listFragment, R.id.loginFragment)
                     .build();
             NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         }

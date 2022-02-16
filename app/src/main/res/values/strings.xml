@@ -24,4 +24,12 @@
     <string name="hint_confirm">Confirmer le mot de passe</string>
     <string name="login_title">Connexion</string>
     <string name="add_account_success">Compte ajouté</string>
+    <string name="delete">Supprimer</string>
+    <string name="see_title">Consultation</string>
+    <string name="title_see">Consulter le mot de passe</string>
+    <string name="account_not_found">Ce compte n\'existe plus.</string>
+    <string name="title_login">Connexion</string>
+    <string name="invalid_password">Mot de passe incorrect.</string>
+    <string name="confirm_pw_error">Les deux mots de passe ne sont pas les mêmes.</string>
+    <string name="delete_account_success">Compte supprimé</string>
 </resources>

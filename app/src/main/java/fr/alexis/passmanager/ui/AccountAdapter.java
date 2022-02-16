@@ -1,10 +1,15 @@
 package fr.alexis.passmanager.ui;
 
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
@@ -13,8 +18,11 @@ import fr.alexis.passmanager.database.Account;
 
 public class AccountAdapter extends ListAdapter<Account, AccountViewHolder> {
 
-    public AccountAdapter(@NonNull DiffUtil.ItemCallback<Account> diffCallback) {
+    private ListFragment listFragment;
+
+    public AccountAdapter(@NonNull DiffUtil.ItemCallback<Account> diffCallback, ListFragment listFragment) {
         super(diffCallback);
+        this.listFragment = listFragment;
     }
 
     @NonNull
@@ -33,6 +41,25 @@ public class AccountAdapter extends ListAdapter<Account, AccountViewHolder> {
         viewHolder.getItemDescription().setText(account.getDescription());
         if(account.getAccount() != null)
             viewHolder.getItemAccount().setText(account.getAccount());
+
+        viewHolder.getItemButtonView().setOnClickListener(view -> {
+            NavController navController = NavHostFragment.findNavController(listFragment);
+            Bundle args = new Bundle();
+            args.putInt("account_id", account.getId());
+            navController.navigate(R.id.action_list_to_see, args);
+        });
+        viewHolder.getItemButtonMore().setOnClickListener(view -> {
+            PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+            popupMenu.inflate(R.menu.item_account_menu);
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.delete_account) {
+                    listFragment.deleteAccount(account.getId());
+                }
+                return true;
+            });
+            popupMenu.show();
+        });
     }
 
     static class AccountDiff extends DiffUtil.ItemCallback<Account> {

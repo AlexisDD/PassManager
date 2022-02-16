@@ -45,6 +45,7 @@
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/listFragment"
             app:popUpToInclusive="true"/>
+
         <action
             android:id="@+id/action_list_to_login"
             app:destination="@id/loginFragment"
@@ -54,6 +55,14 @@
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/listFragment"
             app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_list_to_see"
+            app:destination="@id/seeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -65,7 +74,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="fr.alexis.passmanager.ui.LoginFragment"
-        android:label="LoginFragment"
+        android:label="@string/title_login"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_login_to_list"
@@ -77,5 +86,10 @@
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/seeFragment"
+        android:name="fr.alexis.passmanager.ui.SeeFragment"
+        android:label="@string/title_see"
+        tools:layout="@layout/fragment_see"/>
 
 </navigation>

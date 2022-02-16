@@ -20,9 +20,12 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.Random;
 
 import fr.alexis.passmanager.R;
+import fr.alexis.passmanager.crypto.EncryptionService;
 import fr.alexis.passmanager.database.AccountViewModel;
 import fr.alexis.passmanager.databinding.FragmentListBinding;
 import fr.alexis.passmanager.database.Account;
@@ -52,13 +55,15 @@ public class ListFragment extends Fragment {
         boolean configured = sharedPreferences.getBoolean("configured", false);
         if(!configured) {
             navController.navigate(R.id.action_list_to_config);
+        } else if(!EncryptionService.getInstance().hasSecretKey()) {
+            navController.navigate(R.id.action_list_to_login);
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setAdapter(adapter = new AccountAdapter(new AccountAdapter.AccountDiff()));
+        recyclerView.setAdapter(adapter = new AccountAdapter(new AccountAdapter.AccountDiff(), this));
 
         accountViewModel.getAllAccounts().observe(getViewLifecycleOwner(), accounts -> {
             // Update the cached copy of the accounts in the adapter.
@@ -109,5 +114,13 @@ public class ListFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void deleteAccount(int accountId) {
+
+        accountViewModel.deleteById(accountId);
+        Snackbar snackBar = Snackbar.make(requireActivity().findViewById(R.id.main_parent),
+                R.string.delete_account_success, Snackbar.LENGTH_LONG);
+        snackBar.show();
     }
 }
