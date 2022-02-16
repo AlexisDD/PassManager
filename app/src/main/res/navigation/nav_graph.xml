@@ -69,7 +69,17 @@
         android:id="@+id/addFragment"
         android:name="fr.alexis.passmanager.ui.AddFragment"
         android:label="@string/fragment_add"
-        tools:layout="@layout/fragment_add"/>
+        tools:layout="@layout/fragment_add">
+        <action
+            android:id="@+id/action_add_to_login"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/addFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
@@ -90,6 +100,16 @@
         android:id="@+id/seeFragment"
         android:name="fr.alexis.passmanager.ui.SeeFragment"
         android:label="@string/title_see"
-        tools:layout="@layout/fragment_see"/>
+        tools:layout="@layout/fragment_see">
+        <action
+            android:id="@+id/action_see_to_login"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/seeFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
 </navigation>

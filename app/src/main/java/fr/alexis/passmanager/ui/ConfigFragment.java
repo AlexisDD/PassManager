@@ -3,7 +3,6 @@ package fr.alexis.passmanager.ui;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +23,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 
 import fr.alexis.passmanager.R;
 import fr.alexis.passmanager.crypto.EncryptionService;
@@ -62,26 +59,21 @@ public class ConfigFragment extends Fragment {
                 encryptionService.init(masterInput.getText().toString());
 
                 String monText = EncryptionUtils.LOGIN_HASH;
-                try {
-                    byte[] encryptedBytes = encryptionService.encrypt(monText);
-                    EncryptionUtils.writeSecretKeyToKeystore(encryptionService.getSecretKey());
+                byte[] encryptedBytes = encryptionService.encrypt(monText);
+                EncryptionUtils.writeSecretKeyToKeystore(encryptionService.getSecretKey());
 
-                    // Setting a preference to ask for configuration only on first launch
-                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("login", Base64.encodeToString(encryptedBytes, Base64.DEFAULT));
-                    editor.putBoolean("configured" ,true);
-                    editor.apply();
-                } catch (IllegalBlockSizeException | BadPaddingException | IOException e) {
-                    e.printStackTrace();
-                }
+                // Setting a preference to ask for configuration only on first launch
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("login", Base64.encodeToString(encryptedBytes, Base64.DEFAULT));
+                editor.putBoolean("configured" ,true);
+                editor.apply();
 
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
                 navController.navigate(R.id.action_config_to_list);
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidAlgorithmParameterException | NoSuchPaddingException | InvalidKeyException e) {
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidAlgorithmParameterException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | IOException e) {
                 e.printStackTrace();
             }
-
         });
     }
 }

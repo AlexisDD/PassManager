@@ -1,7 +1,5 @@
 package fr.alexis.passmanager.crypto;
 
-import android.util.Log;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -24,6 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class EncryptionService {
 
     private static EncryptionService instance;
+
     private static final String PBEAlgorithm = "PBEWithSHA256And256BitAES-CBC-BC";
     private static final byte[] salt = "ad7QUAmilD0nhaf.1TuhpVm9mwt-88ZEMWR7".getBytes();
     private static final int iterationCount = 65536;
@@ -47,7 +46,7 @@ public class EncryptionService {
         initCiphers();
     }
 
-    public void init(SecretKey secretKey) throws NoSuchAlgorithmException, NoSuchPaddingException {
+    public void init(SecretKey secretKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
         this.secretKey = secretKey;
         initCiphers();
     }
@@ -70,11 +69,10 @@ public class EncryptionService {
         encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParameterSpec);
 
         byte[] cipher = encryptionCipher.doFinal(plainText.getBytes());
-        Log.e("ENCRYPT-A", Arrays.toString(cipher));
+
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         b.write(iv);
         b.write(cipher);
-        Log.e("ENCRYPT-B", Arrays.toString(b.toByteArray()));
         return b.toByteArray();
     }
 
@@ -90,11 +88,9 @@ public class EncryptionService {
 
     public boolean checkKey(byte[] cipherText) {
         try {
-            Log.e("CHECK-KEY", Arrays.toString(cipherText));
             byte[] iv = Arrays.copyOfRange(cipherText , 0, IV_LENGTH_BYTE);
             byte[] toDecrypt = Arrays.copyOfRange(cipherText, IV_LENGTH_BYTE, cipherText.length);
-            Log.e("CHECK-KEY-IV", Arrays.toString(iv));
-            Log.e("CHECK-KEY-CIPHER", Arrays.toString(toDecrypt));
+
             GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
             decryptionCipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
             decryptionCipher.doFinal(toDecrypt);
@@ -105,9 +101,14 @@ public class EncryptionService {
         }
     }
 
-    private void initCiphers() throws NoSuchAlgorithmException, NoSuchPaddingException {
+    public void initCiphers() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
         encryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
         decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
+        byte[] iv = getRandomIV();
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
+        encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParameterSpec);
+        decryptionCipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
+
     }
 
     public static SecretKey createSecretKey(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {

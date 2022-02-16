@@ -2,10 +2,8 @@ package fr.alexis.passmanager.database;
 
 import android.content.Context;
 
-import androidx.room.AutoMigration;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.TypeConverters;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,7 +14,7 @@ public abstract class Database extends RoomDatabase {
 
     private static volatile Database INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
-    static final ExecutorService databaseWriteExecutor =
+    public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public abstract AccountDao accountDao();

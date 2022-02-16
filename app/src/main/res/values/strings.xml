@@ -32,4 +32,9 @@
     <string name="invalid_password">Mot de passe incorrect.</string>
     <string name="confirm_pw_error">Les deux mots de passe ne sont pas les mêmes.</string>
     <string name="delete_account_success">Compte supprimé</string>
+    <string name="reconnect">Votre session a expiré, veuillez vous reconnecter.</string>
+    <string name="auth_success">Connexion réussie !</string>
+    <string name="biometric_title">Déverrouillage de l\'application</string>
+    <string name="biometric_subtitle">Connexion par empreintes digitales</string>
+    <string name="biometric_cancel">Annuler</string>
 </resources>

@@ -25,9 +25,9 @@ import javax.crypto.IllegalBlockSizeException;
 
 import fr.alexis.passmanager.R;
 import fr.alexis.passmanager.crypto.EncryptionService;
+import fr.alexis.passmanager.crypto.EncryptionUtils;
 import fr.alexis.passmanager.database.Account;
 import fr.alexis.passmanager.database.AccountViewModel;
-import fr.alexis.passmanager.databinding.FragmentLoginBinding;
 import fr.alexis.passmanager.databinding.FragmentSeeBinding;
 
 public class SeeFragment extends Fragment {
@@ -44,13 +44,11 @@ public class SeeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if(!EncryptionService.getInstance().hasSecretKey()) {
-            //login
-            return;
-        }
         EncryptionService encryptionService = EncryptionService.getInstance();
 
         navController = NavHostFragment.findNavController(this);
+        if(EncryptionUtils.checkAuthentication(navController, R.id.action_see_to_login))
+            return;
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 
         Bundle args = getArguments();
@@ -64,7 +62,12 @@ public class SeeFragment extends Fragment {
                 binding.accountInput.setText(account.getAccount());
                 byte[] decrypted = encryptionService.decrypt(account.getCipherPassword());
                 binding.passwordInput.setText(new String(decrypted, StandardCharsets.UTF_8));
-            } catch (ExecutionException | InterruptedException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e) {
+            } catch (InvalidKeyException e) {
+                Toast.makeText(requireContext(),
+                        getString(R.string.reconnect), Toast.LENGTH_SHORT)
+                        .show();
+                navController.navigate(R.id.action_see_to_login);
+            } catch (ExecutionException | InterruptedException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e) {
                 errorNavigateBack();
             }
         } else {

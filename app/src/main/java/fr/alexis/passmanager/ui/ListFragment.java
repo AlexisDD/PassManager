@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,13 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Random;
-
 import fr.alexis.passmanager.R;
-import fr.alexis.passmanager.crypto.EncryptionService;
+import fr.alexis.passmanager.crypto.EncryptionUtils;
 import fr.alexis.passmanager.database.AccountViewModel;
+import fr.alexis.passmanager.database.Database;
 import fr.alexis.passmanager.databinding.FragmentListBinding;
-import fr.alexis.passmanager.database.Account;
 
 public class ListFragment extends Fragment {
 
@@ -36,6 +35,7 @@ public class ListFragment extends Fragment {
     private FragmentListBinding binding;
     private AccountViewModel accountViewModel;
     private AccountAdapter adapter;
+    private NavController navController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,17 +48,18 @@ public class ListFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        NavController navController = NavHostFragment.findNavController(this);
+        navController = NavHostFragment.findNavController(this);
         RecyclerView recyclerView = binding.rvPasswords;
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 
         boolean configured = sharedPreferences.getBoolean("configured", false);
         if(!configured) {
             navController.navigate(R.id.action_list_to_config);
-        } else if(!EncryptionService.getInstance().hasSecretKey()) {
-            navController.navigate(R.id.action_list_to_login);
+            return;
+        } else {
+            if(EncryptionUtils.checkAuthentication(navController, R.id.action_list_to_login))
+                return;
         }
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
@@ -71,7 +72,15 @@ public class ListFragment extends Fragment {
             adapter.submitList(accounts);
         });
 
-        binding.fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_list_to_add));
+        binding.fabAdd.setOnClickListener(v -> {
+            if(EncryptionUtils.checkAuthentication(navController, R.id.action_list_to_login)) {
+                Toast.makeText(requireContext(),
+                        getString(R.string.reconnect), Toast.LENGTH_SHORT)
+                        .show();
+                return;
+            }
+            navController.navigate(R.id.action_list_to_add);
+        });
     }
 
     private void checkIfEmpty(int size) {
@@ -82,6 +91,12 @@ public class ListFragment extends Fragment {
             binding.emptyView.setVisibility(View.GONE);
             binding.rvPasswords.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        EncryptionUtils.checkAuthentication(navController, R.id.action_list_to_login);
+        super.onResume();
     }
 
     @Override
@@ -100,17 +115,23 @@ public class ListFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.action_search) {
-            Log.d(TAG, "Rechercher");
+            Log.v(TAG, "Rechercher");
             // Rechercher dans la liste
         } else if (id == R.id.action_import) {
-            Log.d(TAG, "Importer");
+            Log.v(TAG, "Importer");
             // Import mots de passes
         } else if (id == R.id.action_export) {
-            Log.d(TAG, "Exporter");
+            Log.v(TAG, "Exporter");
             // Exporter mots de passes
         } else if (id == R.id.action_reset) {
-            Log.d(TAG, "Reset");
-            // Réinitialiser
+            Database.databaseWriteExecutor.execute(() -> {
+                Database db = Database.getDatabase(requireContext());
+                db.clearAllTables();
+                EncryptionUtils.deleteKey();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+                sharedPreferences.edit().clear().apply();
+            });
+            navController.navigate(R.id.action_list_to_config);
         }
 
         return super.onOptionsItemSelected(item);

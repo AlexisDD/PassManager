@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,7 +65,10 @@ public class AddFragment extends Fragment implements View.OnClickListener {
 
         byte[] cipherPassword = encryptPassword(passwordInput.getText().toString());
         if(cipherPassword == null) {
-            // login
+            Toast.makeText(requireContext(),
+                    getString(R.string.reconnect), Toast.LENGTH_SHORT)
+                    .show();
+            navController.navigate(R.id.action_add_to_login);
         } else {
             Account newAccount = new Account(descriptionInput.getText().toString(),
                     accountInput.getText().toString(),
@@ -83,9 +87,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             try {
                 EncryptionService encryptionService = EncryptionService.getInstance();
                 return encryptionService.encrypt(plainPassword);
-            } catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | IOException | InvalidKeyException e) {
-                e.printStackTrace();
-            }
+            } catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | IOException | InvalidKeyException ignored) {}
         }
         return null;
     }

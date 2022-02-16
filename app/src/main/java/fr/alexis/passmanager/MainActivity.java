@@ -2,12 +2,7 @@ package fr.alexis.passmanager;
 
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
-
 import androidx.core.splashscreen.SplashScreen;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -15,10 +10,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import fr.alexis.passmanager.databinding.ActivityMainBinding;
+import com.google.android.material.color.DynamicColors;
 
-import android.view.Menu;
-import android.view.MenuItem;
+import fr.alexis.passmanager.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        DynamicColors.applyToActivitiesIfAvailable(getApplication());
 
         setSupportActionBar(binding.toolbar);
 
