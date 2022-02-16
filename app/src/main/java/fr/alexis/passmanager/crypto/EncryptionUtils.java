@@ -40,11 +40,8 @@ public class EncryptionUtils {
                     .setUserAuthenticationRequired(true)
                     .setInvalidatedByBiometricEnrollment(true);
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                keyProt.setUserAuthenticationParameters(KEY_AUTH_TIMEOUT, KeyProperties.AUTH_BIOMETRIC_STRONG);
-            } else {
-                keyProt.setUserAuthenticationValidityDurationSeconds(KEY_AUTH_TIMEOUT);
-            }
+            // Only if minSdk >= 30
+            keyProt.setUserAuthenticationParameters(KEY_AUTH_TIMEOUT, KeyProperties.AUTH_BIOMETRIC_STRONG);
 
             keyStore.setEntry(
                     "master_key",
