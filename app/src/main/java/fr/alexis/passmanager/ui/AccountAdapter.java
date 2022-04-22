@@ -1,7 +1,6 @@
 package fr.alexis.passmanager.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,9 @@ import androidx.recyclerview.widget.ListAdapter;
 import fr.alexis.passmanager.R;
 import fr.alexis.passmanager.database.Account;
 
+/**
+ * Class responsible for displaying accounts list and handle changes in this list.
+ */
 public class AccountAdapter extends ListAdapter<Account, AccountViewHolder> {
 
     private ListFragment listFragment;

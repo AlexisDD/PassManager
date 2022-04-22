@@ -3,6 +3,7 @@ package fr.alexis.passmanager.crypto;
 import android.security.keystore.KeyProperties;
 import android.security.keystore.KeyProtection;
 
+import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 
 import java.io.IOException;
@@ -23,6 +24,11 @@ public class EncryptionUtils {
     private static final int KEY_AUTH_TIMEOUT = 120;
     public static String LOGIN_HASH = "bc7b8edf9b60a083b3cd648237c10897";
 
+    /**
+     * Initialize the Android KeyStore
+     * The Android KeyStore is used to store cryptographic keys in a safe place on the device.
+     * @return the instance of KeyStore
+     */
     private static KeyStore initKeyStore() throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
         KeyStore keyStore;
         keyStore = KeyStore.getInstance(ANDROID_KEYSTORE);
@@ -30,6 +36,11 @@ public class EncryptionUtils {
         return keyStore;
     }
 
+    /**
+     * Write the master secret key to the Android KeyStore.
+     * Requires user authentication (biometric, pin, ..)
+     * @param secretKey The master secret key to store
+     */
     public static void writeSecretKeyToKeystore(SecretKey secretKey) {
         try {
             KeyStore keyStore = initKeyStore();
@@ -50,6 +61,11 @@ public class EncryptionUtils {
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException ignored) {}
     }
 
+    /**
+     * Read the master secret key from the Android KeyStore.
+     * @return the master secret key
+     */
+    @Nullable
     public static SecretKey readSecretKeyFromKeyStore(){
         try {
             KeyStore keyStore = initKeyStore();
@@ -61,6 +77,10 @@ public class EncryptionUtils {
         return null;
     }
 
+    /**
+     * Check if the master key exists in the Android KeyStore.
+     * @return <tt>true</tt> if the key exists
+     */
     public static boolean keyExists(){
         try {
             KeyStore keyStore = initKeyStore();
@@ -71,6 +91,9 @@ public class EncryptionUtils {
         return false;
     }
 
+    /**
+     * Delete the master secret key from the Android KeyStore.
+     */
     public static void deleteKey(){
         try {
             KeyStore keyStore = initKeyStore();
@@ -79,6 +102,14 @@ public class EncryptionUtils {
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException ignored) {}
     }
 
+    /**
+     * Check if the secret key is accessible (i.e the user is authenticated),
+     * else init the ciphers.
+     * @param navController instance of NavController
+     * @param actionId id of the fallback (i.e login) screen
+     * @return <tt>true</tt> if the user is authenticated,
+     * if an error occurs the user is took back to the <tt>actionId</tt> screen.
+     */
     public static boolean checkAuthentication(NavController navController, int actionId) {
         if(!EncryptionService.getInstance().hasSecretKey()) {
             navController.navigate(actionId);

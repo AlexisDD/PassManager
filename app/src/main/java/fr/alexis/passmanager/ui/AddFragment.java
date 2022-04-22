@@ -31,6 +31,9 @@ import fr.alexis.passmanager.database.Account;
 import fr.alexis.passmanager.database.AccountViewModel;
 import fr.alexis.passmanager.databinding.FragmentAddBinding;
 
+/**
+ * Fragment to add an account to the password manager.
+ */
 public class AddFragment extends Fragment implements View.OnClickListener {
 
     private FragmentAddBinding binding;

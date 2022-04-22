@@ -30,6 +30,9 @@ import fr.alexis.passmanager.database.Account;
 import fr.alexis.passmanager.database.AccountViewModel;
 import fr.alexis.passmanager.databinding.FragmentSeeBinding;
 
+/**
+ * Fragment to see information about an account (email, password, ...)
+ */
 public class SeeFragment extends Fragment {
 
     private FragmentSeeBinding binding;

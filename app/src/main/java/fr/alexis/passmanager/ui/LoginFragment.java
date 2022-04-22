@@ -33,6 +33,9 @@ import fr.alexis.passmanager.crypto.EncryptionService;
 import fr.alexis.passmanager.crypto.EncryptionUtils;
 import fr.alexis.passmanager.databinding.FragmentLoginBinding;
 
+/**
+ * Fragment to login with the master password or biometrics
+ */
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private FragmentLoginBinding binding;
@@ -102,6 +105,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             EncryptionService encryptionService = EncryptionService.getInstance();
             try {
                 encryptionService.init(plainPassword);
+                // Should be done in another thread to don't make the UI lag.
                 if(encryptionService.checkKey(Base64.decode(cipherLoginPhrase, Base64.DEFAULT))) {
                     navController.navigate(R.id.action_login_to_list);
                 } else {

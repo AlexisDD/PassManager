@@ -9,6 +9,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.List;
 
+/**
+ * View model to manage database interactions and store data independently of the UI.
+ */
 public class AccountViewModel extends AndroidViewModel {
 
     private final AccountRepository repository;

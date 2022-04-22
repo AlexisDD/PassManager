@@ -19,6 +19,10 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Singleton utility class used to perform cryptographic (AES algorithm) operations as
+ * secret key generation, encryption, decryption, ...
+ */
 public class EncryptionService {
 
     private static EncryptionService instance;
@@ -63,6 +67,11 @@ public class EncryptionService {
         return secretKey != null;
     }
 
+    /**
+     * Encrypt a plain text using the master secret key.
+     * @param plainText text to encrypt
+     * @return cipher text (byte array)
+     */
     public byte[] encrypt(String plainText) throws IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IOException {
         byte[] iv = getRandomIV();
         GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
@@ -76,6 +85,11 @@ public class EncryptionService {
         return b.toByteArray();
     }
 
+    /**
+     * Decrypt a cipher text to the original plain text using the master secret key.
+     * @param cipherText text (byte array) to decrypt
+     * @return plain text (byte array)
+     */
     public byte[] decrypt(byte[] cipherText) throws IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
         byte[] iv = Arrays.copyOfRange(cipherText , 0, IV_LENGTH_BYTE);
         byte[] toDecrypt = Arrays.copyOfRange(cipherText, 12, cipherText.length);
@@ -86,6 +100,11 @@ public class EncryptionService {
         return decryptionCipher.doFinal(toDecrypt);
     }
 
+    /**
+     * Check if the key is the valid master key used to encrypt passwords.
+     * @param cipherText test cipher text
+     * @return <tt>true</tt> if the key is the master key, <tt>false</tt> otherwise
+     */
     public boolean checkKey(byte[] cipherText) {
         try {
             byte[] iv = Arrays.copyOfRange(cipherText , 0, IV_LENGTH_BYTE);
@@ -101,6 +120,9 @@ public class EncryptionService {
         }
     }
 
+    /**
+     * Init the ciphers with the master key.
+     */
     public void initCiphers() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
         encryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
         decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
@@ -111,6 +133,11 @@ public class EncryptionService {
 
     }
 
+    /**
+     * Create a 256-bit AES key from a password.
+     * @param password plain password
+     * @return instance of the created SecretKey
+     */
     public static SecretKey createSecretKey(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, iterationCount);
         SecretKeyFactory keyFac = SecretKeyFactory.getInstance(PBEAlgorithm);
@@ -119,6 +146,10 @@ public class EncryptionService {
         return new SecretKeySpec(s.getEncoded(), "AES");
     }
 
+    /**
+     * Get a random initialization vector for the AES-256 algorithm
+     * @return random IV
+     */
     private static byte[] getRandomIV() {
         byte[] nonce = new byte[IV_LENGTH_BYTE];
         new SecureRandom().nextBytes(nonce);

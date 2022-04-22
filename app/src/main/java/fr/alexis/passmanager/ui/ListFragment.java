@@ -2,7 +2,6 @@ package fr.alexis.passmanager.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -115,15 +114,16 @@ public class ListFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.action_search) {
-            Log.v(TAG, "Rechercher");
-            // Rechercher dans la liste
+            // Search an account, not implemented yet
+            Toast.makeText(requireContext(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.action_import) {
-            Log.v(TAG, "Importer");
-            // Import mots de passes
+            // Import accounts, not implemented yet
+            Toast.makeText(requireContext(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.action_export) {
-            Log.v(TAG, "Exporter");
-            // Exporter mots de passes
+            // Export accounts, not implemented yet
+            Toast.makeText(requireContext(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.action_reset) {
+            // Reset the application (erase all accounts & delete the master key)
             Database.databaseWriteExecutor.execute(() -> {
                 Database db = Database.getDatabase(requireContext());
                 db.clearAllTables();
@@ -137,8 +137,11 @@ public class ListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Delete an account from the UI & the database.
+     * @param accountId id of the account to remove
+     */
     public void deleteAccount(int accountId) {
-
         accountViewModel.deleteById(accountId);
         Snackbar snackBar = Snackbar.make(requireActivity().findViewById(R.id.main_parent),
                 R.string.delete_account_success, Snackbar.LENGTH_LONG);

@@ -3,6 +3,9 @@ package fr.alexis.passmanager.database;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/**
+ * Representation of an account in the database (pair name-cipher password).
+ */
 @Entity
 public class Account {
 

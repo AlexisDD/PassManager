@@ -8,6 +8,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.List;
 
+/**
+ * Interface between the database and the program.
+ */
 public class AccountRepository {
 
     private AccountDao accountDao;

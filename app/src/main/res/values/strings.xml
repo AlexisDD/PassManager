@@ -37,4 +37,5 @@
     <string name="biometric_title">Déverrouillage de l\'application</string>
     <string name="biometric_subtitle">Connexion par empreintes digitales</string>
     <string name="biometric_cancel">Annuler</string>
+    <string name="not_yet_implemented">Fonctionnalité pas encore implémentée</string>
 </resources>

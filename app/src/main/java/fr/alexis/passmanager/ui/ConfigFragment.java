@@ -31,6 +31,10 @@ import fr.alexis.passmanager.crypto.EncryptionService;
 import fr.alexis.passmanager.crypto.EncryptionUtils;
 import fr.alexis.passmanager.databinding.FragmentConfigBinding;
 
+/**
+ * Fragment to setup a master password.
+ * Displays on first launch or after a reset.
+ */
 public class ConfigFragment extends Fragment {
 
     private FragmentConfigBinding binding;
